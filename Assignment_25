@@ -1,0 +1,372 @@
+1)lets convert same code using lambda (use Runnable Interface instead Thread Class)
+2) A person weight on earth is 70KG , lets calculate weight on different solar planets.
+3) write local class to get second line from file and save it in another file (before save string, make
+sure it must encode
+
+Question 1.
+//1)lets convert same code using lambda (use Runnable Interface instead Thread Class)
+
+class BankingApplication 
+{
+    public static void main(String[] args)
+    {
+        BankAccount myAccount = new BankAccount(1000);
+
+        Runnable objDeposit = () -> myAccount.deposit(500);
+        Runnable objWithdra = () -> myAccount.withdraw(700);
+        Runnable objBalance= () -> myAccount.checkBalance();
+
+        Thread depositThread = new Thread(objDeposit);
+        Thread withdrawThread = new Thread(objWithdra);
+        Thread balanceThread = new Thread(objBalance);
+        depositThread.start();
+        withdrawThread.start();
+        balanceThread.start();
+    }
+}
+
+class BankAccount 
+{
+    private double balance;
+
+    public BankAccount(double balance) 
+    {
+        this.balance = balance;
+    }
+
+    public synchronized void deposit(double amount) 
+    {
+        System.out.println("Depositing: " + amount);
+        balance += amount;
+        System.out.println("New balance: " + balance);
+    }
+
+    public synchronized void withdraw(double amount) 
+    {
+        if (amount > balance)
+        {
+            System.out.println("Insufficient balance to withdraw " + amount);
+        } 
+        else 
+        {
+            System.out.println("Withdrawing: " + amount);
+            balance -= amount;
+            System.out.println("New balance: " + balance);
+        }
+    }
+
+    public synchronized void checkBalance()
+    {
+        System.out.println("Current balance: " + balance);
+    }
+}
+
+question 2..
+
+2) A person weight on earth is 70KG , lets calculate weight on different solar planets.
+
+class Planet implements Runnable
+{
+    private String planets;
+    private double graviRatio;
+
+    public Planet(String planet, double graviRatio) 
+    {
+        this.planets = planet;
+        this.graviRatio = graviRatio;
+    }
+
+    public void run() 
+    {
+        double weight = 70 * graviRatio;
+        System.out.printf("weight on diff planet", planets, weight);
+    }
+}
+
+public class WeightinPlan 
+{
+    public static void main(String[] args) 
+    {
+        String[] diffplanets = {"Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
+        double[] gravityRatios = {0.38, 0.91, 0.38, 2.34, 1.06, 0.92, 1.19};
+
+        for (int i = 0; i < diffplanets.length; i++) 
+        {
+            Thread t1 = new Thread(new Planet(diffplanets[i], gravityRatios[i]));
+            t1.start();
+        }
+    }
+
+3)
+
+
+package Date_25;
+
+/*
+	public class BankingApplication
+	{
+	 
+		public static void main(String[] args)
+		{ 
+			
+		BankAccount_UserOperation myAccount=new BankAccount_UserOperation(1000);
+		Thread t1=new DepositThread(myAccount, 500);
+		Thread t2=new WithdrawThread(myAccount,700);
+		Thread t3=new BalanceThread(myAccount);
+		t1.start();
+		t2.start();
+		t3.start();
+	 
+		}
+	 
+	}//BankingApplication
+	 
+	class BankAccount_UserOperation
+	{
+		private double balance;
+	 
+		public BankAccount_UserOperation(double initbalance)
+		{
+			this.balance = initbalance;
+		}
+		
+		public synchronized void deposit(double amount) 
+		{
+			System.out.println(Thread.currentThread().getName()+" Depositing "+amount);
+			this.balance +=amount;
+			System.out.println("Updated balance after Deposit : "+this.balance);
+		}
+		
+		public synchronized void withdraw(double amount)
+		{
+			if(amount>this.balance) 
+			{
+				System.out.println(Thread.currentThread().getName()+" Insufficient Balance... transaction failed");
+			}
+			else 
+			{
+				System.out.println(Thread.currentThread().getName()+" Withdrawing Amount "+amount);
+				this.balance -=amount;
+				System.out.println("Updated balance after Withdraw : "+this.balance);
+			}
+		}
+		
+		public synchronized void checkBalance()
+		{
+			System.out.println(Thread.currentThread().getName()+"Checking balance : "+this.balance);
+		}
+		
+	}//BankAccount
+	 
+	 
+	class DepositThread extends Thread
+	{
+		private BankAccount_UserOperation account;
+		private double amount;
+		
+		public DepositThread(BankAccount_UserOperation account, double amount)
+		{
+			this.account = account;
+			this.amount = amount;
+		}
+		
+		@Override
+		public void run() 
+		{
+			account.deposit(amount);
+		}
+		
+	}//DepositThread
+	 
+	class WithdrawThread extends Thread
+	{
+		private BankAccount_UserOperation account;
+		private double amount;
+		public WithdrawThread(BankAccount_UserOperation account, double amount) 
+		{
+			this.account = account;
+			this.amount = amount;
+		}
+		
+		@Override
+		public void run()
+		{
+			account.withdraw(amount);
+		}
+		
+		
+	}//WithdrawThread
+	 
+	 
+	 
+	class BalanceThread extends Thread
+	{
+		private BankAccount_UserOperation account;
+	 
+		public BalanceThread(BankAccount_UserOperation account)
+		{
+			this.account = account;
+		}
+		
+		@Override
+		public void run()
+		{
+			account.checkBalance();
+		}
+		
+	}//BalanceThread
+	 
+	
+	
+// using lambda
+///
+///1) lets convert same code using lambda (use Runnable Interface instead Thread Class)
+2) A person weight on earth is 70KG , lets calculate weight on different solar planets.
+3) write local class to get second line from file and save it in another file (before save string, make
+sure it must encode)
+ 
+
+class BankingApplication 
+{
+    public static void main(String[] args)
+    {
+        BankAccount myAccount = new BankAccount(1000);
+
+        Runnable objDeposit = () -> myAccount.deposit(500);
+        Runnable objWithdra = () -> myAccount.withdraw(700);
+        Runnable objBalance= () -> myAccount.checkBalance();
+
+        Thread depositThread = new Thread(objDeposit);
+        Thread withdrawThread = new Thread(objWithdra);
+        Thread balanceThread = new Thread(objBalance);
+        depositThread.start();
+        withdrawThread.start();
+        balanceThread.start();
+    }
+}
+
+class BankAccount 
+{
+    private double balance;
+
+    public BankAccount(double balance) 
+    {
+        this.balance = balance;
+    }
+
+    public synchronized void deposit(double amount) 
+    {
+        System.out.println("Depositing: " + amount);
+        balance += amount;
+        System.out.println("New balance: " + balance);
+    }
+
+    public synchronized void withdraw(double amount) 
+    {
+        if (amount > balance)
+        {
+            System.out.println("Insufficient balance to withdraw " + amount);
+        } 
+        else 
+        {
+            System.out.println("Withdrawing: " + amount);
+            balance -= amount;
+            System.out.println("New balance: " + balance);
+        }
+    }
+
+    public synchronized void checkBalance()
+    {
+        System.out.println("Current balance: " + balance);
+    }
+}
+
+//2>  A person weight on earth is 70KG , lets calculate weight on different solar planets.
+
+class Planet implements Runnable
+{
+    private String planets;
+    private double graviRatio;
+
+    public Planet(String planet, double graviRatio) 
+    {
+        this.planets = planet;
+        this.graviRatio = graviRatio;
+    }
+
+    public void run() 
+    {
+        double weight = 70 * graviRatio;
+        System.out.printf("weight on diff planet", planets, weight);
+    }
+}
+
+public class WeightinPlan 
+{
+    public static void main(String[] args) 
+    {
+        String[] diffplanets = {"Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
+        double[] gravityRatios = {0.38, 0.91, 0.38, 2.34, 1.06, 0.92, 1.19};
+
+        for (int i = 0; i < diffplanets.length; i++) 
+        {
+            Thread t1 = new Thread(new Planet(diffplanets[i], gravityRatios[i]));
+            t1.start();
+        }
+    }
+}
+*/
+
+
+
+// question 3
+
+import java.io.*;
+import java.util.Base64;
+
+public class SecondLineEncoder {
+    public static void main(String[] args) {
+        try {
+            // Open the input file
+            BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
+
+            // Read first and second lines
+            reader.readLine(); // skip first line
+            String secondLine = reader.readLine(); // get second line
+            reader.close();
+
+            if (secondLine != null) {
+
+                // Local class to encode and save
+                class Encoder {
+                    void encodeAndSave(String data) throws IOException {
+                        // Encode using Base64
+                        String encoded = Base64.getEncoder().encodeToString(data.getBytes());
+
+                        // Write to output file
+                        BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"));
+                        writer.write(encoded);
+                        writer.close();
+                    }
+                }
+
+                // Create object of local class and call method
+                Encoder encoder = new Encoder();
+                encoder.encodeAndSave(secondLine);
+
+                System.out.println("Second line encoded and saved.");
+            } else {
+                System.out.println("Second line not found.");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+}
+
+
+3)
