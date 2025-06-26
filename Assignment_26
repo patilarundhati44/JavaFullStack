@@ -1,0 +1,75 @@
+) Reverse String using Generic for Characters
+*    String str="Hello";
+* 2) Check if two elements exist in array
+
+1>
+
+package Date_26;
+public class Rev
+
+{
+	public static void reverse()
+
+    {
+        String s = "heloo";
+
+        char[] arr = s.toCharArray();
+
+       
+        int left = 0, right = arr.length - 1;
+        
+        while (left < right) 
+        
+        {
+            char temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
+        }
+
+        
+        System.out.print("Reversed String: ");
+        System.out.println(new String(arr));
+    }
+	
+	public static void main(String[] args) 
+	
+	{
+		Rev.reverse();
+	}
+}
+
+
+2>
+
+class Check<T>
+
+{
+    T[] arr;
+    Check(T[] arr)
+    { 
+    	this.arr = arr;
+    	
+    }
+
+    boolean find(T a, T b) 
+    {
+        int count = 0;
+        for (T x : arr)
+            if (x.equals(a) || x.equals(b)) count++;
+        return count >= 2;
+    }
+}
+
+public class Main
+{
+    public static void main(String[] args)
+    {
+        Integer[] num = {10, 20, 30};
+        System.out.println(new Check<>(num).find(10, 30)); // true
+
+        String[] str = {"apple", "mango", "banana"};
+        System.out.println(new Check<>(str).find("apple", "grape")); // false
+    }
+}
