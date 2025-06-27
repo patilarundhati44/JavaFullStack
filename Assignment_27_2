@@ -1,0 +1,38 @@
+package_27;
+
+public class LSearch<T> 
+{
+    T[] ar;
+
+    LSearch(T[] ar)
+    
+    {
+        this.ar = ar;
+    }
+
+    int search(T target) 
+    
+    {
+        for (int i = 0; i < ar.length; i++) 
+        {
+            if (ar[i].equals(target)) 
+            
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) 
+    {
+        Integer[] a = {10, 20, 30, 40, 50};
+        LSearch<Integer> ob = new LSearch<>(a);
+
+        System.out.println("index of 30" + ob.search(30)); 
+        System.out.println("index of 60" + ob.search(60));  
+    }
+}
+
+
+
