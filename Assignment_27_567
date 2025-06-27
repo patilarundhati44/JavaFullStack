@@ -1,0 +1,115 @@
+Count Occurrence of Element
+Explanation -> Given a generic array and target element ,count how many times the element appears
+ 
+2)Liner Search
+Explanation -> Given a generic array and target element ,return its index , if not found return -1
+ 
+3)Find Minimum and Maximum from array
+Explanation -> from array return Min and Max value
+ 
+4)Check if an array is sorted
+-> Given generic array, check if it is sorted in non-descending order
+ 
+5)Find middle element
+->Given generic array, return the middle element
+ 
+6)Check if Two elements exists in array
+->Given Generic array and two elements ,check if both exist in array and return index where it present
+ 
+7)Find substring and its number of occurrence , if found return range of index where it found
+ 
+"Rust’s rich type system and ownership model guarantee memory-safety and thread-safety — enabling you to eliminate many classes of bugs at compile-time. "
+ 
+Sting subStr="safety";
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+** 5) 5)Find middle element
+->Given generic array, return the middle element   **
+
+package Date_25;
+class MiddleElement<T> 
+
+{
+    T[] arr;
+
+    MiddleElement(T[] arr) 
+    
+    {
+        this.arr = arr;
+    }
+
+    T getMiddle() 
+    
+    {
+        int mid = arr.length / 2;
+        return arr[mid];
+    }
+
+    public static void main(String[] args) 
+    
+    {
+        Integer[] intArr = {10, 20, 30, 40, 50};
+        MiddleElement<Integer> obj1 = new MiddleElement<>(intArr);
+        System.out.println("middle element  " + obj1.getMiddle());
+
+        
+    }
+}
+
+
+output  :---  middle element 30
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6)Check if Two elements exists in array
+->Given Generic array and two elements ,check if both exist in array and return index where it present
+
+
+class Check<T>
+{
+    T[] arr;
+
+    Check(T[] arr) 
+    
+    {
+        this.arr = arr;
+    }
+
+    void find(T x, T y)
+    
+    {
+        for (int i = 0; i < arr.length; i++) 
+        
+        {
+            if (arr[i].equals(x))
+                System.out.println(x + " at position of " + i);
+            
+            if (arr[i].equals(y))
+                System.out.println(y + " at position of" + i);
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        Integer[] a = {1, 2, 3, 4};
+        new Check<>(a).find(2, 4);
+
+    }
+}
+
+
+_____________________________________________________________________________________________________________________________________________________
+
+7)Find substring and its number of occurrence , if found return range of index where it found
+ 
+"Rust’s rich type system and ownership model guarantee memory-safety and thread-safety — enabling you to eliminate many classes of bugs at compile-time. "
+ 
+Sting subStr="safety";
+
+
+
+
+
