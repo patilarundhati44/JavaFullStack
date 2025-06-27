@@ -1,0 +1,23 @@
+
+public class LSearch
+{
+    public static <T> int search(T[] arr, T target)
+    {
+        for (int i = 0; i < arr.length; i++) 
+        {
+            if (arr[i].equals(target)) 
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) 
+    {
+        Integer[] a = {10, 20, 30, 40, 50};
+        System.out.println("index of 30: " + search(a, 30));  
+        System.out.println("index of 60: " + search(a, 60));  
+    }
+}
+
