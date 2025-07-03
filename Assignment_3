@@ -1,0 +1,179 @@
+-- country table
+create table country
+(
+    country_id serial primary key,
+    country varchar(50) not null,
+    last_update timestamp default current_timestamp
+);
+
+-- city table
+create table city (
+    city_id serial primary key,
+    city varchar(50) not null,
+    country_id int references country(country_id),
+    last_update timestamp default current_timestamp
+);
+
+-- address table
+create table address (
+    address_id serial primary key,
+    address varchar(100),
+    address2 varchar(100),
+    district varchar(50),
+    city_id int references city(city_id),
+    postal_code varchar(20),
+    phone varchar(20),
+    last_update timestamp default current_timestamp
+);
+
+-- customer table
+create table customer (
+    customer_id serial primary key,
+    store_id int,
+    first_name varchar(50),
+    last_name varchar(50),
+    email varchar(100),
+    address_id int references address(address_id),
+    activebool boolean,
+    create_date date,
+    last_update timestamp default current_timestamp,
+    active int
+);
+
+-- language table
+create table language (
+    language_id serial primary key,
+    name varchar(20),
+    last_update timestamp default current_timestamp
+);
+
+-- film table
+create table film (
+    film_id serial primary key,
+    title varchar(255),
+    description text,
+    release_year int,
+    language_id int references language(language_id),
+    rental_duration int,
+    rental_rate decimal(5,2),
+    length int,
+    replacement_cost decimal(5,2),
+    rating varchar(10),
+    last_update timestamp default current_timestamp,
+    special_features text,
+    fulltext text
+);
+
+-- category table
+create table category (
+    category_id serial primary key,
+    name varchar(50),
+    last_update timestamp default current_timestamp
+);
+
+-- film_category table
+create table film_category (
+    film_id int references film(film_id),
+    category_id int references category(category_id),
+    last_update timestamp default current_timestamp,
+    primary key (film_id, category_id)
+);
+
+-- inventory table
+create table inventory (
+    inventory_id serial primary key,
+    film_id int references film(film_id),
+    store_id int,
+    last_update timestamp default current_timestamp
+);
+
+-- staff table
+create table staff (
+    staff_id serial primary key,
+    first_name varchar(50),
+    last_name varchar(50),
+    address_id int references address(address_id),
+    email varchar(100),
+    store_id int,
+    active boolean,
+    username varchar(50),
+    password varchar(50),
+    last_update timestamp default current_timestamp,
+    picture bytea
+);
+
+-- rental table
+create table rental (
+    rental_id serial primary key,
+    rental_date timestamp,
+    inventory_id int references inventory(inventory_id),
+    customer_id int references customer(customer_id),
+    return_date timestamp,
+    staff_id int references staff(staff_id),
+    last_update timestamp default current_timestamp
+);
+
+-- payment table
+create table payment (
+    payment_id serial primary key,
+    customer_id int references customer(customer_id),
+    staff_id int references staff(staff_id),
+    rental_id int references rental(rental_id),
+    amount decimal(7,2),
+    payment_date timestamp
+);
+
+-- insert into country
+insert into country (country) values ('india'), ('america');
+
+-- insert into city
+insert into city (city, country_id) values ('mumbai', 1), ('delhi', 2);
+
+-- insert into address (fixed quote error)
+insert into address (address, district, city_id, postal_code, phone)
+values ('123 lothali road', 'dharashiv', 1, '400001', '9988776655');
+
+-- insert into customer
+insert into customer (store_id, first_name, last_name, email, address_id, activebool, create_date, active)
+values (1, 'arundati', 'patil', 'aru@gmail.com', 1, true, '2024-01-01', 1);
+
+-- insert into language
+insert into language (name) values ('english'), ('hindi');
+
+-- insert into film
+insert into film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, rating)
+values ('figheter', 'indian film', 1975, 2, 5, 2.99, 180, 9.99, 'pg');
+
+-- insert into category
+insert into category (name) values ('action'), ('drama');
+
+-- insert into film_category
+insert into film_category (film_id, category_id) values (1, 1);
+
+-- insert into inventory
+insert into inventory (film_id, store_id) values (1, 1);
+
+-- insert into staff
+insert into staff (first_name, last_name, address_id, email, store_id, active, username, password)
+values ('raj', 'verma', 1, 'raj@store.com', 1, true, 'raj', 'pass123');
+
+-- insert into rental
+insert into rental (rental_date, inventory_id, customer_id, return_date, staff_id)
+values (now(), 1, 1, now() + interval '5 day', 1);
+
+-- insert into payment
+insert into payment (customer_id, staff_id, rental_id, amount, payment_date)
+values (1, 1, 1, 2.99);
+
+select * from country;
+select * from city;
+select * from address;
+select * from customer;
+select * from language;
+select * from film;
+select * from category;
+select * from film_category;
+select * from inventory;
+select * from staff;
+select * from rental;
+select * from payment;
