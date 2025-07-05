@@ -1,0 +1,152 @@
+package jdbcdemo;
+
+import java.sql.*;
+import java.util.*;
+
+public class JDBC_Demo_PostgreSQL
+
+{
+
+	private static final String URL = "jdbc:postgresql://localhost:5432/mydb";
+	private static final String USER = "postgres";
+	private static final String PASSWD = "patil_123";
+
+	private static Connection getConnection() throws SQLException
+
+  {
+		return DriverManager.getConnection(URL, USER, PASSWD);
+	}
+
+	public static void createTbl(String tbl, String sql)
+{
+		try (Connection con = getConnection(); Statement stmt = con.createStatement()) 
+   {
+			stmt.executeUpdate(sql);
+			System.out.println(tbl + " created successfully");
+		
+catch (SQLException e)
+   {
+			e.printStackTrace();
+		}
+	}
+
+	public static void insertTblRow(String tblName, Collection<Data> dataCollection, String query) throws SQLException
+{
+		try (Connection con = getConnection(); PreparedStatement pstm = con.prepareStatement(query))
+{
+			for (Data d : dataCollection)
+{
+				pstm.setInt(1, d.getId());
+				pstm.setString(2, d.getName());
+				pstm.setInt(3, d.getAge());
+				pstm.setFloat(4, d.getSalary());
+				pstm.addBatch();
+}
+			int[] rowInserted = pstm.executeBatch();
+			System.out.println(rowInserted.length + " rows inserted successfully into " + tblName);
+		}
+	}
+
+	public static List<Data> readAllRows(String tbl, String sql) 
+
+{
+		List<Data> dlist = new ArrayList<>();
+		try (Connection con = getConnection(); PreparedStatement stm = con.prepareStatement(sql);
+			 ResultSet rs = stm.executeQuery()) 
+{
+			while (rs.next()) 
+{
+				Data data = new Data(rs.getInt("id"), rs.getString("name"), rs.getInt("age"), rs.getFloat("salary"));
+				dlist.add(data);
+			}
+		} 
+catch (SQLException e)
+{
+			e.printStackTrace();
+		}
+		return dlist;
+	}
+
+	// update rows
+
+	public static void updateRows(Collection<Data> dataCollection) 
+{
+		String updateSQL = "UPDATE empdetails SET name = ?, age = ?, salary = ? WHERE id = ?";
+		try (Connection con = getConnection(); PreparedStatement stmt = con.prepareStatement(updateSQL))
+{
+			for (Data d : dataCollection) 
+{
+				stmt.setString(1, d.getName());
+				stmt.setInt(2, d.getAge());
+				stmt.setFloat(3, d.getSalary());
+				stmt.setInt(4, d.getId());
+				stmt.addBatch();
+			}
+			int[] updated = stmt.executeBatch();
+			System.out.println(updated.length + " rows updated successfully.");
+		}
+catch (SQLException e) 
+{
+			e.printStackTrace();
+		}
+	}
+
+	//  remove multiple rowss
+	public static void deleteRows(Collection<Integer> ids) 
+{
+		String deleteSQL = "DELETE FROM empdetails WHERE id = ?";
+		try (Connection con = getConnection(); PreparedStatement stmt = con.prepareStatement(deleteSQL)) 
+{
+			for (Integer id : ids) 
+{
+				stmt.setInt(1, id);
+				stmt.addBatch();
+			}
+			int[] deleted = stmt.executeBatch();
+			System.out.println(deleted.length + " rows deleted successfully.");
+		} 
+catch (SQLException e) 
+{
+			e.printStackTrace();
+		}
+	}
+
+
+	public static void main(String[] args)
+{
+		String table = "empdetails";
+
+		//  insert
+		Collection<Data> dataCollection = new ArrayList<>();
+		dataCollection.add(new Data(2, "Arundati", 40, 500000));
+		dataCollection.add(new Data(3, "aditi", 30, 60000));
+		dataCollection.add(new Data(4, "ruhii", 50, 750000));
+
+		
+		String insertSQL = "INSERT INTO " + table + " VALUES (?, ?, ?, ?)";
+		try
+{
+			insertTblRow(table, dataCollection, insertSQL);
+		} 
+catch (SQLException e) 
+{
+			e.printStackTrace();
+		}
+
+		// update
+		Collection<Data> updateCollection = new ArrayList<>();
+		updateCollection.add(new Data(2, "Arundati", 41, 210000));
+		updateCollection.add(new Data(4, "ruhii", 51, 255000));
+		updateMultipleRows(updateCollection);
+
+		// delete
+		Collection<Integer> deleteIds = Arrays.asList(3);
+		deleteMultipleRows(deleteIds);
+
+		//  display
+		String selectSQL = "SELECT * FROM " + table;
+		List<Data> emp = readAllRows(table, selectSQL);
+		System.out.println("Remaining Records:");
+		emp.forEach(System.out::println);
+	}
+}
